@@ -44,12 +44,16 @@ export function mountLoading({ canvas, onComplete }) {
 
   return {
     playSequence({ progressEl, brandEl, buttonEl, durationMs = 2400 }) {
+      // Hide brand/button at start (they're visible by default for no-JS fallback)
+      gsap.set(brandEl, { opacity: 0, y: 20 });
+      gsap.set(buttonEl, { opacity: 0, y: 20 });
+
       const tl = gsap.timeline();
       tl.to(progressEl, { width: '100%', duration: durationMs / 1000, ease: 'power2.out' });
       tl.call(() => {
         if (horse) {
           horse.traverse((c) => {
-            if (c.isMesh) {
+            if (c.isMesh && c.material) {
               gsap.to(c.material, { opacity: 0, duration: 0.7, ease: 'power2.out' });
             }
           });

@@ -39,9 +39,9 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) translateY(20px);
+      transform: translate(-50%, -50%);
       text-align: center;
-      opacity: 0;
+      opacity: 1;
       pointer-events: none;
       z-index: 101;
     }
@@ -62,9 +62,50 @@
       position: absolute;
       bottom: 12vh;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      opacity: 0;
+      transform: translateX(-50%);
+      opacity: 1;
       z-index: 101;
+    }
+    /* Boot error display — visible if JS fails to load */
+    .boot-error {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      padding: 0.8rem 1rem;
+      background: rgba(180, 40, 40, 0.18);
+      border: 1px solid rgba(220, 80, 80, 0.5);
+      color: #ffb4b4;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      z-index: 9999;
+      max-height: 40vh;
+      overflow: auto;
+      border-radius: 4px;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .boot-error.show { display: block; }
+    .boot-noscript {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      background: var(--bg);
+      color: var(--silver);
+      z-index: 99999;
+      text-align: center;
+      padding: 2rem;
+    }
+    .boot-noscript h2 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 2rem;
+      color: var(--silver-bright);
     }
 
     /* === Hero === */
@@ -329,6 +370,15 @@
 </head>
 <body>
 
+  <noscript>
+    <div class="boot-noscript">
+      <h2>Felpes Company</h2>
+      <p>Esta experiência precisa de JavaScript ativo no navegador.</p>
+    </div>
+  </noscript>
+
+  <div class="boot-error" id="bootError"></div>
+
   <!-- 1. Loading overlay -->
   <div class="loading-root" id="loadingRoot">
     <canvas class="loading-canvas" id="loadingCanvas"></canvas>
@@ -389,6 +439,39 @@
     <p class="sub">Felpes Company &middot; Em breve</p>
   </div>
 
+  <script>
+    // Surface JS errors visibly so the user sees a message instead of a black screen.
+    (function () {
+      var box = document.getElementById('bootError');
+      function show(msg) {
+        if (!box) return;
+        box.classList.add('show');
+        box.textContent = (box.textContent ? box.textContent + '\n\n' : '') + msg;
+      }
+      window.addEventListener('error', function (e) {
+        show('[error] ' + (e.message || e.error) + (e.filename ? ' @ ' + e.filename + ':' + e.lineno : ''));
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        show('[promise] ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+      });
+
+      // Safety net: if module never wires the Entrar button, this still dismisses the loader.
+      var btn = document.getElementById('loadingEnter');
+      var root = document.getElementById('loadingRoot');
+      if (btn && root) {
+        btn.addEventListener('click', function () {
+          setTimeout(function () {
+            // If loader is still here after the GSAP fadeOut would have run, force-hide it.
+            if (root && root.parentNode && root.style.display !== 'none' && root.style.opacity !== '0') {
+              root.style.transition = 'opacity 0.6s ease';
+              root.style.opacity = '0';
+              setTimeout(function () { root.style.display = 'none'; }, 700);
+            }
+          }, 1500);
+        });
+      }
+    })();
+  </script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
