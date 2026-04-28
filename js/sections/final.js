@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createChromeMaterial } from '../core/chrome-material.js';
+import { createDustField } from '../core/dust.js';
 
 function buildTrophy(material) {
   const trophy = new THREE.Group();
@@ -101,7 +102,11 @@ export function mountFinal({ canvas }) {
   gsap.to(trophy.rotation, { y: Math.PI * 2, repeat: -1, duration: 18, ease: 'none' });
   gsap.to(trophy.position, { y: 0.18, yoyo: true, repeat: -1, duration: 4, ease: 'sine.inOut' });
 
+  const dust = createDustField({ count: 500, radius: 12, size: 0.022 });
+  scene.add(dust);
+
   let mounted = true;
+  const clock = new THREE.Clock();
 
   function onResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -112,6 +117,8 @@ export function mountFinal({ canvas }) {
 
   function tick() {
     if (!mounted) return;
+    const dt = clock.getDelta() * 60;
+    dust.userData.tick(dt);
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }

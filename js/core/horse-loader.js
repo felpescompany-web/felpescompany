@@ -8,10 +8,20 @@ let loadPromise = null;
 
 function buildPlaceholder() {
   const group = new THREE.Group();
-  const geom = new THREE.BoxGeometry(1.2, 1.2, 1.2);
-  const mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color: 0xC0C0C0, wireframe: true }));
-  mesh.name = 'PLACEHOLDER_CUBE';
-  group.add(mesh);
+  // Elegant chrome sculpture instead of a cube — luxe placeholder
+  const knot = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(0.8, 0.22, 220, 32, 2, 3),
+    new THREE.MeshStandardMaterial({ color: 0xE8E8E8, metalness: 1.0, roughness: 0.18 })
+  );
+  knot.name = 'PLACEHOLDER_KNOT';
+  group.add(knot);
+  // Subtle inner orbital ring
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(1.15, 0.012, 8, 128),
+    new THREE.MeshStandardMaterial({ color: 0xC0C0C0, metalness: 1.0, roughness: 0.3 })
+  );
+  ring.rotation.x = Math.PI / 2.2;
+  group.add(ring);
   group.userData.isPlaceholder = true;
   return group;
 }

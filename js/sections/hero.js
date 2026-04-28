@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { loadHorse } from '../core/horse-loader.js';
 import { applyChromeToObject } from '../core/chrome-material.js';
+import { createDustField } from '../core/dust.js';
 
 export function mountHero({ canvas }) {
   const scene = new THREE.Scene();
@@ -27,6 +28,9 @@ export function mountHero({ canvas }) {
   rim.position.set(0, 5, -3);
   scene.add(rim);
   scene.add(new THREE.AmbientLight(0x202428, 0.4));
+
+  const dust = createDustField({ count: 700, radius: 14 });
+  scene.add(dust);
 
   let horse = null;
   let mounted = true;
@@ -66,8 +70,10 @@ export function mountHero({ canvas }) {
   }
   window.addEventListener('resize', onResize);
 
+  const clock = new THREE.Clock();
   function tick() {
     if (!mounted) return;
+    const dt = clock.getDelta() * 60;
     current.rx += (target.rx - current.rx) * 0.08;
     current.ry += (target.ry - current.ry) * 0.08;
     current.cx += (target.cx - current.cx) * 0.06;
@@ -77,6 +83,8 @@ export function mountHero({ canvas }) {
       horse.rotation.x = current.rx;
       horse.rotation.y = current.ry;
     }
+    dust.userData.tick(dt);
+
     camera.position.x = current.cx;
     camera.position.y = 0.2 + current.cy;
     camera.lookAt(0, 0, 0);

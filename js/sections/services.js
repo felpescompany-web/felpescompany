@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { loadHorse } from '../core/horse-loader.js';
 import { applyChromeToObject } from '../core/chrome-material.js';
+import { createDustField } from '../core/dust.js';
 
 export const SERVICES = [
   { num: '01', nome: 'Design Gráfico',                desc: 'Peças visuais que comunicam poder antes de qualquer palavra.', categoria: 'Visual' },
@@ -49,8 +50,12 @@ export function mountServices({ canvas, sectionEl, slidesContainer, dotsContaine
   const fill = new THREE.DirectionalLight(0xaab5c4, 0.5);
   fill.position.set(-3, 1, 2); scene.add(fill);
 
+  const dust = createDustField({ count: 600, radius: 14 });
+  scene.add(dust);
+
   let horse = null;
   let mounted = true;
+  const clock = new THREE.Clock();
 
   loadHorse().then((h) => {
     if (!mounted) return;
@@ -70,6 +75,8 @@ export function mountServices({ canvas, sectionEl, slidesContainer, dotsContaine
 
   function tick() {
     if (!mounted) return;
+    const dt = clock.getDelta() * 60;
+    dust.userData.tick(dt);
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
   }
