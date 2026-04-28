@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createChromeMaterial } from '../core/chrome-material.js';
 import { createDustField } from '../core/dust.js';
+const gsap = window.gsap;
 
 function buildTrophy(material) {
   const trophy = new THREE.Group();

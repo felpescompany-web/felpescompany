@@ -9,13 +9,13 @@
   {
     "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
-      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm",
-      "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js/+esm",
-      "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.0.42/+esm"
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
     }
   }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.42/dist/lenis.min.js"></script>
   <style>
     .hero-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; }
     .scroll-indicator {
@@ -68,8 +68,8 @@
   </div>
 
   <script type="module">
-    import gsap from 'gsap';
     import { mountHero } from '../js/sections/hero.js';
+    const gsap = window.gsap;
 
     mountHero({ canvas: document.getElementById('heroCanvas') });
 

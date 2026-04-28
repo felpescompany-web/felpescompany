@@ -1,6 +1,6 @@
-import Lenis from 'lenis';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+const Lenis = window.Lenis;
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
 
 gsap.registerPlugin(ScrollTrigger);
 

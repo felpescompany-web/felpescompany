@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import { loadHorse } from '../core/horse-loader.js';
 import { applyChromeToObject } from '../core/chrome-material.js';
 import { createDustField } from '../core/dust.js';
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
 
 export const SERVICES = [
   { num: '01', nome: 'Design Gráfico',                desc: 'Peças visuais que comunicam poder antes de qualquer palavra.', categoria: 'Visual' },

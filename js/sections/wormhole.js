@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 import vertexShader from '../shaders/wormhole.vert.js';
 import fragmentShader from '../shaders/wormhole.frag.js';
 import { loadHorse } from '../core/horse-loader.js';
 import { applyChromeToObject } from '../core/chrome-material.js';
+const gsap = window.gsap;
 
 export function mountWormhole({ canvas }) {
   const scene = new THREE.Scene();

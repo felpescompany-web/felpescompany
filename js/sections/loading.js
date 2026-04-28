@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 import { loadHorse, applyWireframe } from '../core/horse-loader.js';
+const gsap = window.gsap;
 
 export function mountLoading({ canvas, onComplete }) {
   const scene = new THREE.Scene();

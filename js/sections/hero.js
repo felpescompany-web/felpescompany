@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 import { loadHorse } from '../core/horse-loader.js';
 import { applyChromeToObject } from '../core/chrome-material.js';
 import { createDustField } from '../core/dust.js';
+const gsap = window.gsap;
 
 export function mountHero({ canvas }) {
   const scene = new THREE.Scene();

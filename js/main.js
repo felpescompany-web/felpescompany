@@ -1,11 +1,12 @@
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import { initLenis, getLenis } from './core/lenis.js';
 import { mountLoading } from './sections/loading.js';
 import { mountHero } from './sections/hero.js';
 import { mountServices } from './sections/services.js';
 import { mountFinal } from './sections/final.js';
 import { mountWormhole } from './sections/wormhole.js';
+
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
 
 window.MAIN_LOADED = true;
 gsap.registerPlugin(ScrollTrigger);
