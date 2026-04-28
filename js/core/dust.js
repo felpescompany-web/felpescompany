@@ -1,14 +1,10 @@
 import * as THREE from 'three';
 
-/**
- * Floating silver dust — atmospheric depth without assets.
- * Returns a Points object you can add to any scene.
- */
 export function createDustField({ count = 600, radius = 14, size = 0.018, color = 0xC0C0C0 } = {}) {
   const positions = new Float32Array(count * 3);
   const speeds = new Float32Array(count);
+
   for (let i = 0; i < count; i++) {
-    // Sphere shell distribution (more particles in mid-distance)
     const r = radius * (0.4 + Math.random() * 0.6);
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
@@ -17,6 +13,7 @@ export function createDustField({ count = 600, radius = 14, size = 0.018, color 
     positions[i * 3 + 2] = r * Math.cos(phi);
     speeds[i] = 0.05 + Math.random() * 0.15;
   }
+
   const geom = new THREE.BufferGeometry();
   geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
@@ -43,5 +40,6 @@ export function createDustField({ count = 600, radius = 14, size = 0.018, color 
     geom.attributes.position.needsUpdate = true;
     points.rotation.y += dt * 0.0003;
   };
+
   return points;
 }

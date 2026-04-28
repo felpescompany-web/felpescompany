@@ -7,7 +7,6 @@ import { mountWormhole } from './sections/wormhole.js';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
-
 window.MAIN_LOADED = true;
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,23 +16,18 @@ const els = {
   loadingProgress: document.getElementById('loadingProgress'),
   loadingBrand:    document.getElementById('loadingBrand'),
   loadingEnter:    document.getElementById('loadingEnter'),
-
   heroCanvas:      document.getElementById('heroCanvas'),
   scrollLine:      document.getElementById('scrollLine'),
-
   servicesSection: document.getElementById('servicesSection'),
   servicesCanvas:  document.getElementById('servicesCanvas'),
   servicesSlides:  document.getElementById('servicesSlides'),
   servicesDots:    document.getElementById('servicesDots'),
-
   finalCanvas:     document.getElementById('finalCanvas'),
   finalCTA:        document.getElementById('finalCTA'),
-
   wormholeOverlay: document.getElementById('wormholeOverlay'),
   wormholeCanvas:  document.getElementById('wormholeCanvas'),
 };
 
-// 1) Loading screen first — body is locked from scrolling
 document.body.style.overflow = 'hidden';
 
 const loadingCtrl = mountLoading({
@@ -43,6 +37,7 @@ const loadingCtrl = mountLoading({
     bootMain();
   },
 });
+
 loadingCtrl.playSequence({
   progressEl: els.loadingProgress,
   brandEl:    els.loadingBrand,
@@ -51,16 +46,13 @@ loadingCtrl.playSequence({
 });
 
 let mainMounted = false;
+
 function bootMain() {
   if (mainMounted) return;
   mainMounted = true;
-
   document.body.style.overflow = '';
-
   initLenis();
-
   mountHero({ canvas: els.heroCanvas });
-
   gsap.to(els.scrollLine, {
     scaleY: 0.3,
     opacity: 0.4,
@@ -69,17 +61,14 @@ function bootMain() {
     repeat: -1,
     ease: 'sine.inOut',
   });
-
   mountServices({
     canvas: els.servicesCanvas,
     sectionEl: els.servicesSection,
     slidesContainer: els.servicesSlides,
     dotsContainer:   els.servicesDots,
   });
-
   mountFinal({ canvas: els.finalCanvas });
 
-  // Wormhole stays cold until triggered
   let wormholeCtrl = null;
   els.finalCTA.addEventListener('click', () => {
     if (wormholeCtrl) return;
@@ -89,19 +78,11 @@ function bootMain() {
     wormholeCtrl = mountWormhole({ canvas: els.wormholeCanvas });
     wormholeCtrl.play({
       onComplete: () => {
-        // Replace with redirect to a real contact page when available:
-        // window.location.href = 'contact.html';
         const placeholder = document.getElementById('contactPlaceholder');
         if (placeholder) placeholder.classList.add('show');
       },
     });
   });
-
-  // Pause off-screen sections to save GPU
-  const observers = [
-    { el: els.heroCanvas,     enter: () => {}, exit: () => {} },
-  ];
-  // (intentional no-op stub — each section already pauses via its own RAF gate)
 }
 
 els.loadingEnter.addEventListener('click', () => {

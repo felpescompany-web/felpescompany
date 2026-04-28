@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { loadHorse, applyWireframe } from '../core/horse-loader.js';
+
 const gsap = window.gsap;
 
 export function mountLoading({ canvas, onComplete }) {
@@ -44,10 +45,8 @@ export function mountLoading({ canvas, onComplete }) {
 
   return {
     playSequence({ progressEl, brandEl, buttonEl, durationMs = 2400 }) {
-      // Hide brand/button at start (they're visible by default for no-JS fallback)
       gsap.set(brandEl, { opacity: 0, y: 20 });
       gsap.set(buttonEl, { opacity: 0, y: 20 });
-
       const tl = gsap.timeline();
       tl.to(progressEl, { width: '100%', duration: durationMs / 1000, ease: 'power2.out' });
       tl.call(() => {

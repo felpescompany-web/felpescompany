@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createChromeMaterial } from '../core/chrome-material.js';
 import { createDustField } from '../core/dust.js';
+
 const gsap = window.gsap;
 
 function buildTrophy(material) {
@@ -33,7 +34,6 @@ function buildTrophy(material) {
   knot.position.y = -0.32;
   trophy.add(knot);
 
-  // Cup as LatheGeometry (chalice profile)
   const points = [];
   const profile = [
     [0.12, -0.18],
@@ -53,18 +53,17 @@ function buildTrophy(material) {
   cup.position.y = -0.05;
   trophy.add(cup);
 
-  // Handles (two halves of a torus on each side)
   const handleGeom = new THREE.TorusGeometry(0.22, 0.03, 16, 64, Math.PI);
   const left = new THREE.Mesh(handleGeom, material);
   left.position.set(-0.50, 0.35, 0);
   left.rotation.set(0, Math.PI / 2, Math.PI / 2);
   trophy.add(left);
+
   const right = new THREE.Mesh(handleGeom, material);
   right.position.set(0.50, 0.35, 0);
   right.rotation.set(0, -Math.PI / 2, Math.PI / 2);
   trophy.add(right);
 
-  // Top accent
   const top = new THREE.Mesh(new THREE.SphereGeometry(0.05, 24, 24), material);
   top.position.y = 0.78;
   trophy.add(top);

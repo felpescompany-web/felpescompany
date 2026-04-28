@@ -5,11 +5,9 @@ const envCache = new WeakMap();
 
 export function getEnvMap(renderer) {
   if (envCache.has(renderer)) return envCache.get(renderer);
-
   const pmrem = new THREE.PMREMGenerator(renderer);
   const env = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
   pmrem.dispose();
-
   envCache.set(renderer, env);
   return env;
 }

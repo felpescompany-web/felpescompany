@@ -66,7 +66,6 @@
       opacity: 1;
       z-index: 101;
     }
-    /* Boot error display — visible if JS fails to load */
     .boot-error {
       position: fixed;
       bottom: 1rem;
@@ -433,14 +432,12 @@
     <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
   </div>
 
-  <!-- Placeholder de contato (substituir por contact.html quando existir) -->
   <div class="contact-placeholder" id="contactPlaceholder">
     <p class="title">Construa a sua.</p>
     <p class="sub">Felpes Company &middot; Em breve</p>
   </div>
 
   <script>
-    // Boot diagnostics — visible feedback so users see WHY something failed.
     (function () {
       var box = document.getElementById('bootError');
       function show(msg) {
@@ -449,8 +446,6 @@
         box.textContent = (box.textContent ? box.textContent + '\n' : '') + msg;
       }
       window.__bootShow = show;
-
-      // Catch every kind of error we can.
       window.addEventListener('error', function (e) {
         var src = e.target && e.target.src ? ' [src=' + e.target.src + ']' : '';
         var loc = e.filename ? ' @ ' + e.filename + ':' + e.lineno : '';
@@ -459,15 +454,11 @@
       window.addEventListener('unhandledrejection', function (e) {
         show('[promise] ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
       });
-
-      // Hook console.error/warn so 3rd-party warnings also surface.
       var origErr = console.error.bind(console);
       console.error = function () {
         try { show('[console] ' + Array.from(arguments).map(String).join(' ')); } catch (_) {}
         origErr.apply(console, arguments);
       };
-
-      // Watchdog — if main.js never reports ready, tell the user.
       setTimeout(function () {
         if (!window.MAIN_LOADED) {
           show('[boot] Bibliotecas externas (jsdelivr) demorando para carregar… aguarde.');
@@ -478,8 +469,6 @@
           show('[boot] CDN não carregou em 10s. Causas comuns: ad-blocker (Opera GX/Brave/uBlock), VPN, ou rede que bloqueia cdnjs/unpkg.');
         }
       }, 10000);
-
-      // Safety net: ensure the loading overlay can always be dismissed.
       var btn = document.getElementById('loadingEnter');
       var root = document.getElementById('loadingRoot');
       if (btn && root) {

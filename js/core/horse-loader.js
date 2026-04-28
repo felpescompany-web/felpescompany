@@ -7,10 +7,6 @@ const HORSE_PATH = new URL('../../assets/models/horse.glb', import.meta.url).hre
 let cachedScene = null;
 let loadPromise = null;
 
-function buildPlaceholder() {
-  return buildProceduralHorse();
-}
-
 export function loadHorse() {
   if (cachedScene) {
     return Promise.resolve(cachedScene.clone(true));
@@ -29,22 +25,18 @@ export function loadHorse() {
         const size = box.getSize(new THREE.Vector3()).length();
         const scale = 2.4 / size;
         cachedScene.scale.setScalar(scale);
-
         const wrapper = new THREE.Group();
         wrapper.add(cachedScene);
         cachedScene = wrapper;
-
         resolve(cachedScene.clone(true));
       },
       undefined,
       () => {
-        // GLB ausente — usa cavalo procedural sem ruído.
-        cachedScene = buildPlaceholder();
+        cachedScene = buildProceduralHorse();
         resolve(cachedScene.clone(true));
       }
     );
   });
-
   return loadPromise;
 }
 

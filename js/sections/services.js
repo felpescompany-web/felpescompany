@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { loadHorse } from '../core/horse-loader.js';
 import { applyChromeToObject } from '../core/chrome-material.js';
 import { createDustField } from '../core/dust.js';
+
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
 
@@ -28,7 +29,6 @@ const POSES = [
 ];
 
 export function mountServices({ canvas, sectionEl, slidesContainer, dotsContainer }) {
-  // --- 3D scene ---
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x080808);
 
@@ -62,7 +62,6 @@ export function mountServices({ canvas, sectionEl, slidesContainer, dotsContaine
     horse = applyChromeToObject(h, renderer);
     horse.scale.setScalar(1.0);
     scene.add(horse);
-
     gsap.to(horse.position, { y: '+=0.12', yoyo: true, repeat: -1, duration: 3.4, ease: 'sine.inOut' });
   });
 
@@ -82,7 +81,6 @@ export function mountServices({ canvas, sectionEl, slidesContainer, dotsContaine
   }
   tick();
 
-  // --- DOM build ---
   slidesContainer.innerHTML = '';
   dotsContainer.innerHTML = '';
 
@@ -112,8 +110,6 @@ export function mountServices({ canvas, sectionEl, slidesContainer, dotsContaine
     return d;
   });
 
-  // --- ScrollTriggers ---
-  // Pin the canvas + UI for the whole section
   ScrollTrigger.create({
     trigger: sectionEl,
     start: 'top top',
@@ -122,10 +118,8 @@ export function mountServices({ canvas, sectionEl, slidesContainer, dotsContaine
     pinSpacing: false,
   });
 
-  // Per-slide enter/exit
   slideEls.forEach((slide, i) => {
     gsap.set(slide, { opacity: 0, y: 60 });
-
     ScrollTrigger.create({
       trigger: sectionEl,
       start: `top+=${i * window.innerHeight} top`,
