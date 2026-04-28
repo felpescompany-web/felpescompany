@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const HORSE_PATH = '/assets/models/horse.glb';
+const HORSE_PATH = new URL('../../assets/models/horse.glb', import.meta.url).href;
 
 let cachedScene = null;
 let loadPromise = null;
