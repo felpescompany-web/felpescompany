@@ -9,11 +9,11 @@
   <script type="importmap">
   {
     "imports": {
-      "three": "https://esm.sh/three@0.160.0",
-      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
-      "gsap": "https://esm.sh/gsap@3.12.5",
-      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
-      "lenis": "https://esm.sh/lenis@1.0.42"
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm",
+      "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js/+esm",
+      "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.0.42/+esm"
     }
   }
   </script>
@@ -440,28 +440,51 @@
   </div>
 
   <script>
-    // Surface JS errors visibly so the user sees a message instead of a black screen.
+    // Boot diagnostics — visible feedback so users see WHY something failed.
     (function () {
       var box = document.getElementById('bootError');
       function show(msg) {
         if (!box) return;
         box.classList.add('show');
-        box.textContent = (box.textContent ? box.textContent + '\n\n' : '') + msg;
+        box.textContent = (box.textContent ? box.textContent + '\n' : '') + msg;
       }
+      window.__bootShow = show;
+
+      // Catch every kind of error we can.
       window.addEventListener('error', function (e) {
-        show('[error] ' + (e.message || e.error) + (e.filename ? ' @ ' + e.filename + ':' + e.lineno : ''));
-      });
+        var src = e.target && e.target.src ? ' [src=' + e.target.src + ']' : '';
+        var loc = e.filename ? ' @ ' + e.filename + ':' + e.lineno : '';
+        show('[error] ' + (e.message || e.error || 'resource failed') + src + loc);
+      }, true);
       window.addEventListener('unhandledrejection', function (e) {
         show('[promise] ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
       });
 
-      // Safety net: if module never wires the Entrar button, this still dismisses the loader.
+      // Hook console.error/warn so 3rd-party warnings also surface.
+      var origErr = console.error.bind(console);
+      console.error = function () {
+        try { show('[console] ' + Array.from(arguments).map(String).join(' ')); } catch (_) {}
+        origErr.apply(console, arguments);
+      };
+
+      // Watchdog — if main.js never reports ready, tell the user.
+      setTimeout(function () {
+        if (!window.MAIN_LOADED) {
+          show('[boot] Bibliotecas externas (jsdelivr) demorando para carregar… aguarde.');
+        }
+      }, 4000);
+      setTimeout(function () {
+        if (!window.MAIN_LOADED) {
+          show('[boot] CDN não carregou em 10s. Causas comuns: ad-blocker (Opera GX/Brave/uBlock), VPN, ou rede que bloqueia cdn.jsdelivr.net.');
+        }
+      }, 10000);
+
+      // Safety net: ensure the loading overlay can always be dismissed.
       var btn = document.getElementById('loadingEnter');
       var root = document.getElementById('loadingRoot');
       if (btn && root) {
         btn.addEventListener('click', function () {
           setTimeout(function () {
-            // If loader is still here after the GSAP fadeOut would have run, force-hide it.
             if (root && root.parentNode && root.style.display !== 'none' && root.style.opacity !== '0') {
               root.style.transition = 'opacity 0.6s ease';
               root.style.opacity = '0';

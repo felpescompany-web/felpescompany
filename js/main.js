@@ -7,6 +7,7 @@ import { mountServices } from './sections/services.js';
 import { mountFinal } from './sections/final.js';
 import { mountWormhole } from './sections/wormhole.js';
 
+window.MAIN_LOADED = true;
 gsap.registerPlugin(ScrollTrigger);
 
 const els = {
