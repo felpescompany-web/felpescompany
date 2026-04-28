@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felpes Company — Wormhole</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.160.0",
+      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis": "https://esm.sh/lenis@1.0.42"
+    }
+  }
+  </script>
+  <style>
+    body { background: #080808; }
+    .wormhole-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; }
+    .start-btn {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+    }
+    .placeholder {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      z-index: 10;
+      color: var(--silver);
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      letter-spacing: var(--tracking);
+    }
+    .placeholder.show { display: flex; }
+  </style>
+</head>
+<body>
+  <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
+  <button class="btn-pill start-btn" id="startBtn">
+    Iniciar wormhole <span class="arrow">&rarr;</span>
+  </button>
+  <div class="placeholder" id="placeholder">— Página de Contato —</div>
+
+  <script type="module">
+    import { mountWormhole } from '../js/sections/wormhole.js';
+
+    const ctrl = mountWormhole({ canvas: document.getElementById('wormholeCanvas') });
+    const btn = document.getElementById('startBtn');
+
+    btn.addEventListener('click', () => {
+      btn.style.display = 'none';
+      ctrl.play({
+        onComplete: () => {
+          document.getElementById('placeholder').classList.add('show');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

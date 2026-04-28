@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felpes Company — Tela Final</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.160.0",
+      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis": "https://esm.sh/lenis@1.0.42"
+    }
+  }
+  </script>
+  <style>
+    .final-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; }
+    .final-content {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 8vh;
+      gap: 1.4rem;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .final-content > * { pointer-events: auto; }
+    .final-slogan {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.6rem, 3vw, 2.6rem);
+      color: var(--silver-bright);
+      text-align: center;
+      max-width: 26ch;
+      line-height: 1.25;
+    }
+    .final-brand {
+      font-size: 0.7rem;
+      color: var(--silver);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .final-vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <canvas class="final-canvas" id="finalCanvas"></canvas>
+  <div class="final-vignette"></div>
+  <div class="final-content">
+    <p class="final-slogan">Todo império começa com uma identidade.</p>
+    <div class="final-brand">Felpes Company</div>
+    <button class="btn-pill" id="finalCTA">
+      Construa a sua <span class="arrow">&rarr;</span>
+    </button>
+  </div>
+
+  <script type="module">
+    import { mountFinal } from '../js/sections/final.js';
+
+    mountFinal({ canvas: document.getElementById('finalCanvas') });
+
+    document.getElementById('finalCTA').addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('wormhole:start'));
+      alert('Trigger wormhole — abra 5-wormhole.html para ver a transição');
+    });
+  </script>
+</body>
+</html>

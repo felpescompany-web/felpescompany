@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felpes Company — Loading</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.160.0",
+      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis": "https://esm.sh/lenis@1.0.42"
+    }
+  }
+  </script>
+  <style>
+    .loading-root {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+    .loading-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .loading-progress {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      width: 0%;
+      background: var(--silver);
+      z-index: 102;
+    }
+    .loading-brand {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translateY(20px);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 101;
+    }
+    .loading-brand h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 6vw, 5.2rem);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+    .loading-brand .sub {
+      font-size: 0.72rem;
+      color: var(--silver);
+      letter-spacing: var(--tracking-wide);
+    }
+    .loading-enter {
+      position: absolute;
+      bottom: 12vh;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      z-index: 101;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-root" id="loadingRoot">
+    <canvas class="loading-canvas" id="loadingCanvas"></canvas>
+    <div class="loading-brand" id="loadingBrand">
+      <h1 class="silver-gradient">FELPES COMPANY</h1>
+      <div class="sub tracked-wide">Design &amp; Marketing</div>
+    </div>
+    <button class="btn-pill loading-enter" id="loadingEnter">
+      Entrar <span class="arrow">&rarr;</span>
+    </button>
+    <div class="loading-progress" id="loadingProgress"></div>
+  </div>
+
+  <script type="module">
+    import { mountLoading } from '../js/sections/loading.js';
+
+    const canvas = document.getElementById('loadingCanvas');
+    const progressEl = document.getElementById('loadingProgress');
+    const brandEl = document.getElementById('loadingBrand');
+    const buttonEl = document.getElementById('loadingEnter');
+    const root = document.getElementById('loadingRoot');
+
+    const ctrl = mountLoading({
+      canvas,
+      onComplete: () => { root.style.display = 'none'; }
+    });
+
+    ctrl.playSequence({ progressEl, brandEl, buttonEl, durationMs: 2400 });
+
+    buttonEl.addEventListener('click', () => {
+      ctrl.fadeOut();
+    });
+  </script>
+</body>
+</html>

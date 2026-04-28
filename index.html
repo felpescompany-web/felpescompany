@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felpes Company — Todo império começa com uma identidade.</title>
+  <meta name="description" content="Felpes Company — Design & Marketing. Todo império começa com uma identidade." />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.160.0",
+      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis": "https://esm.sh/lenis@1.0.42"
+    }
+  }
+  </script>
+  <style>
+    /* === Loading overlay === */
+    .loading-root {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+    .loading-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .loading-progress {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      width: 0%;
+      background: var(--silver);
+      z-index: 102;
+    }
+    .loading-brand {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translateY(20px);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 101;
+    }
+    .loading-brand h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 6vw, 5.2rem);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+    .loading-brand .sub {
+      font-size: 0.72rem;
+      color: var(--silver);
+      letter-spacing: var(--tracking-wide);
+    }
+    .loading-enter {
+      position: absolute;
+      bottom: 12vh;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      z-index: 101;
+    }
+
+    /* === Hero === */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .corner-mark {
+      position: fixed;
+      font-family: var(--serif);
+      font-size: 0.78rem;
+      letter-spacing: var(--tracking);
+      color: var(--silver);
+      opacity: 0.7;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .corner-mark.tl { top: 2.4rem; left: 2.4rem; }
+    .corner-mark.tr { top: 2.4rem; right: 2.4rem; }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .scroll-indicator .label {
+      font-size: 0.62rem;
+      letter-spacing: var(--tracking-wide);
+      color: var(--silver);
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .scroll-indicator .line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, transparent, var(--silver));
+      transform-origin: top;
+    }
+
+    /* === Services === */
+    .services-section {
+      position: relative;
+      width: 100%;
+      height: 800vh;
+    }
+    .services-pin {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+    }
+    .services-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .services-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.92) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .services-slides { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+    .service-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      padding: 0 8vw;
+      gap: 4vw;
+    }
+    .service-left { grid-column: 1; max-width: 28rem; }
+    .service-num {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      letter-spacing: var(--tracking);
+      margin-bottom: 1.6rem;
+      color: var(--silver);
+    }
+    .service-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3.4vw, 3rem);
+      line-height: 1.05;
+      color: var(--silver-bright);
+      margin-bottom: 1.2rem;
+    }
+    .service-desc {
+      color: var(--silver);
+      opacity: 0.7;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 22rem;
+    }
+    .service-right {
+      grid-column: 3;
+      justify-self: end;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    .service-cat-line { width: 60px; height: 1px; background: var(--silver); opacity: 0.5; }
+    .service-cat { font-size: 0.72rem; color: var(--silver); }
+    .service-index { font-family: var(--serif); font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; }
+    .services-dots {
+      position: absolute;
+      bottom: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.7rem;
+      z-index: 4;
+    }
+    .service-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: background 0.4s ease, transform 0.4s ease;
+    }
+    .service-dot.active { background: var(--silver); transform: scale(1.4); }
+    .services-section-title {
+      position: absolute;
+      top: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--serif);
+      font-size: 0.78rem;
+      letter-spacing: var(--tracking-wide);
+      color: var(--silver);
+      opacity: 0.6;
+      z-index: 4;
+    }
+    @media (max-width: 768px) {
+      .service-slide {
+        grid-template-columns: 1fr;
+        padding: 0 6vw;
+        align-content: center;
+      }
+      .service-left, .service-right { grid-column: 1; }
+      .service-right { align-items: flex-start; text-align: left; margin-top: 2rem; }
+    }
+
+    /* === Final === */
+    .final-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+    .final-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .final-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .final-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 8vh;
+      gap: 1.4rem;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .final-content > * { pointer-events: auto; }
+    .final-slogan {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.6rem, 3vw, 2.6rem);
+      color: var(--silver-bright);
+      text-align: center;
+      max-width: 26ch;
+      line-height: 1.25;
+    }
+    .final-brand {
+      font-size: 0.7rem;
+      color: var(--silver);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* === Wormhole overlay === */
+    .wormhole-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+    .wormhole-overlay.active {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+    .wormhole-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .contact-placeholder {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      background: var(--bg);
+      z-index: 300;
+      color: var(--silver);
+    }
+    .contact-placeholder.show { display: flex; }
+    .contact-placeholder .title {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: var(--silver-bright);
+    }
+    .contact-placeholder .sub {
+      font-size: 0.7rem;
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Loading overlay -->
+  <div class="loading-root" id="loadingRoot">
+    <canvas class="loading-canvas" id="loadingCanvas"></canvas>
+    <div class="loading-brand" id="loadingBrand">
+      <h1 class="silver-gradient">FELPES COMPANY</h1>
+      <div class="sub tracked-wide">Design &amp; Marketing</div>
+    </div>
+    <button class="btn-pill loading-enter" id="loadingEnter">
+      Entrar <span class="arrow">&rarr;</span>
+    </button>
+    <div class="loading-progress" id="loadingProgress"></div>
+  </div>
+
+  <div class="corner-mark tl">FELPES</div>
+  <div class="corner-mark tr tracked">MMXXVI</div>
+
+  <!-- 2. Hero -->
+  <section class="hero-section">
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="scroll-indicator">
+      <div class="label">Scroll</div>
+      <div class="line" id="scrollLine"></div>
+    </div>
+  </section>
+
+  <!-- 3. Services -->
+  <section class="services-section" id="servicesSection">
+    <div class="services-pin">
+      <canvas class="services-canvas" id="servicesCanvas"></canvas>
+      <div class="services-vignette"></div>
+      <div class="services-section-title tracked-wide">— Serviços —</div>
+      <div class="services-slides" id="servicesSlides"></div>
+      <div class="services-dots" id="servicesDots"></div>
+    </div>
+  </section>
+
+  <!-- 4. Final -->
+  <section class="final-section">
+    <canvas class="final-canvas" id="finalCanvas"></canvas>
+    <div class="final-vignette"></div>
+    <div class="final-content">
+      <p class="final-slogan">Todo império começa com uma identidade.</p>
+      <div class="final-brand">Felpes Company</div>
+      <button class="btn-pill" id="finalCTA">
+        Construa a sua <span class="arrow">&rarr;</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 5. Wormhole overlay -->
+  <div class="wormhole-overlay" id="wormholeOverlay">
+    <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
+  </div>
+
+  <!-- Placeholder de contato (substituir por contact.html quando existir) -->
+  <div class="contact-placeholder" id="contactPlaceholder">
+    <p class="title">Construa a sua.</p>
+    <p class="sub">Felpes Company &middot; Em breve</p>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

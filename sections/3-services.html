@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felpes Company — Serviços</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.160.0",
+      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis": "https://esm.sh/lenis@1.0.42"
+    }
+  }
+  </script>
+  <style>
+    .services-section {
+      position: relative;
+      width: 100%;
+      height: 800vh;
+    }
+    .services-pin {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+    }
+    .services-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .services-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.92) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .services-slides {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .service-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      padding: 0 8vw;
+      gap: 4vw;
+    }
+    .service-left {
+      grid-column: 1;
+      max-width: 28rem;
+    }
+    .service-num {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      letter-spacing: var(--tracking);
+      margin-bottom: 1.6rem;
+      color: var(--silver);
+    }
+    .service-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3.4vw, 3rem);
+      line-height: 1.05;
+      color: var(--silver-bright);
+      margin-bottom: 1.2rem;
+    }
+    .service-desc {
+      color: var(--silver);
+      opacity: 0.7;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 22rem;
+    }
+    .service-right {
+      grid-column: 3;
+      justify-self: end;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    .service-cat-line {
+      width: 60px;
+      height: 1px;
+      background: var(--silver);
+      opacity: 0.5;
+    }
+    .service-cat {
+      font-size: 0.72rem;
+      color: var(--silver);
+    }
+    .service-index {
+      font-family: var(--serif);
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+    .services-dots {
+      position: absolute;
+      bottom: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.7rem;
+      z-index: 4;
+    }
+    .service-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: background 0.4s ease, transform 0.4s ease;
+    }
+    .service-dot.active {
+      background: var(--silver);
+      transform: scale(1.4);
+    }
+    .services-section-title {
+      position: absolute;
+      top: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--serif);
+      font-size: 0.78rem;
+      letter-spacing: var(--tracking-wide);
+      color: var(--silver);
+      opacity: 0.6;
+      z-index: 4;
+    }
+    @media (max-width: 768px) {
+      .service-slide {
+        grid-template-columns: 1fr;
+        padding: 0 6vw;
+        align-content: center;
+      }
+      .service-left { grid-column: 1; }
+      .service-right { grid-column: 1; align-items: flex-start; text-align: left; margin-top: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <section class="services-section" id="servicesSection">
+    <div class="services-pin">
+      <canvas class="services-canvas" id="servicesCanvas"></canvas>
+      <div class="services-vignette"></div>
+      <div class="services-section-title tracked-wide">— Serviços —</div>
+      <div class="services-slides" id="servicesSlides"></div>
+      <div class="services-dots" id="servicesDots"></div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { initLenis } from '../js/core/lenis.js';
+    import { mountServices } from '../js/sections/services.js';
+
+    initLenis();
+
+    mountServices({
+      canvas: document.getElementById('servicesCanvas'),
+      sectionEl: document.getElementById('servicesSection'),
+      slidesContainer: document.getElementById('servicesSlides'),
+      dotsContainer: document.getElementById('servicesDots'),
+    });
+  </script>
+</body>
+</html>

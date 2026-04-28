@@ -1,0 +1,126 @@
+:root {
+  --bg: #080808;
+  --silver: #C0C0C0;
+  --silver-bright: #E8E8E8;
+  --silver-dark: #888888;
+  --white: #E8E8E8;
+  --muted: #444444;
+  --serif: 'Georgia', 'Times New Roman', serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --tracking: 0.18em;
+  --tracking-wide: 0.4em;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body { min-height: 100vh; }
+
+a { color: inherit; text-decoration: none; }
+
+canvas { display: block; }
+
+button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.silver-gradient {
+  background: linear-gradient(180deg, #F5F5F5 0%, #C0C0C0 50%, #888888 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.tracked {
+  letter-spacing: var(--tracking);
+  text-transform: uppercase;
+}
+
+.tracked-wide {
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.thin-line {
+  width: 1px;
+  background: var(--silver);
+  opacity: 0.6;
+}
+
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 1em 2.4em;
+  border: 1px solid var(--silver);
+  color: var(--silver);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.5s ease, color 0.5s ease, letter-spacing 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-pill:hover {
+  background: var(--silver);
+  color: var(--bg);
+  letter-spacing: 0.5em;
+}
+
+.btn-pill .arrow {
+  display: inline-block;
+  transition: transform 0.4s ease;
+}
+
+.btn-pill:hover .arrow {
+  transform: translateX(4px);
+}
+
+.full-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.overlay-fixed {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.overlay-fixed > * { pointer-events: auto; }
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+  z-index: 5;
+}

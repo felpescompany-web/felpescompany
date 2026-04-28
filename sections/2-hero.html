@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felpes Company — Hero</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://esm.sh/three@0.160.0",
+      "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "gsap/ScrollTrigger": "https://esm.sh/gsap@3.12.5/ScrollTrigger",
+      "lenis": "https://esm.sh/lenis@1.0.42"
+    }
+  }
+  </script>
+  <style>
+    .hero-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+    .scroll-indicator {
+      position: fixed;
+      bottom: 4vh;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .scroll-indicator .label {
+      font-size: 0.62rem;
+      letter-spacing: var(--tracking-wide);
+      color: var(--silver);
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+    .scroll-indicator .line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, transparent, var(--silver));
+      transform-origin: top;
+    }
+    .corner-mark {
+      position: fixed;
+      font-family: var(--serif);
+      font-size: 0.78rem;
+      letter-spacing: var(--tracking);
+      color: var(--silver);
+      opacity: 0.7;
+      z-index: 5;
+    }
+    .corner-mark.tl { top: 2.4rem; left: 2.4rem; }
+    .corner-mark.tr { top: 2.4rem; right: 2.4rem; }
+  </style>
+</head>
+<body>
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+
+  <div class="corner-mark tl">FELPES</div>
+  <div class="corner-mark tr tracked">MMXXVI</div>
+
+  <div class="scroll-indicator">
+    <div class="label">Scroll</div>
+    <div class="line" id="scrollLine"></div>
+  </div>
+
+  <script type="module">
+    import gsap from 'gsap';
+    import { mountHero } from '../js/sections/hero.js';
+
+    mountHero({ canvas: document.getElementById('heroCanvas') });
+
+    gsap.to('#scrollLine', {
+      scaleY: 0.3,
+      opacity: 0.4,
+      duration: 1.2,
+      yoyo: true,
+      repeat: -1,
+      ease: 'sine.inOut'
+    });
+  </script>
+</body>
+</html>
